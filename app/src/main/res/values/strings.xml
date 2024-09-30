@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">MyWeather App</string>
+    <string name="label_unknown_error">Unknown error occurred</string>
+    <string name="label_no_internet_connection">No Internet connection</string>
+</resources>
