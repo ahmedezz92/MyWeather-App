@@ -4,6 +4,13 @@ import com.google.gson.annotations.SerializedName
 
 data class WrappedResponse<T>(
     var code: Int,
-    @SerializedName("page") var page: Int,
-    @SerializedName("results") var data: T? = null
+)
+
+data class WrappedErrorResponse(
+    @SerializedName("error") var errorResponse: ErrorResponse,
+)
+
+data class ErrorResponse(
+    val code: Int,
+    val message: String
 )

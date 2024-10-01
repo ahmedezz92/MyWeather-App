@@ -3,4 +3,8 @@
     <string name="label_unknown_error">Unknown error occurred</string>
     <string name="label_no_internet_connection">No Internet connection</string>
     <string name="label_title">Weather Forecasting App</string>
+    <string name="hint_enter_city_name">Enter city name</string>
+    <string name="label_forecast">5-day Forecast</string>
+    <string name="label_humidity">Humidity</string>
+    <string name="label_feels_like">Feels like</string>
 </resources>

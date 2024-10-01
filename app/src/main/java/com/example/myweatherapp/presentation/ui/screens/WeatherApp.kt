@@ -4,21 +4,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.myweatherapp.presentation.ui.components.forecast.MovieDetailsScreen
+import com.example.myweatherapp.presentation.ui.components.forecast.CityForecastView
 //import com.example.myweatherapp.presentation.ui.components.MovieDetailsScreen
 import com.example.myweatherapp.presentation.ui.components.SearchScreen
+import com.example.myweatherapp.presentation.ui.components.forecast.CityForecastViewModel
 
 
-@Preview
 @Composable
-fun WeatherApp(weatherViewModel: WeatherViewModel = hiltViewModel()) {
+fun WeatherApp(
+    weatherViewModel: WeatherViewModel = hiltViewModel(),
+    cityForecastViewModel: CityForecastViewModel = hiltViewModel()
+) {
     val navController = rememberNavController()
 
     Scaffold(
@@ -38,10 +40,10 @@ fun WeatherApp(weatherViewModel: WeatherViewModel = hiltViewModel()) {
                 route = "cityWeatherForecast/{cityName}",
                 arguments = listOf(navArgument("cityName") { type = NavType.StringType })
             ) { backStackEntry ->
-                val movieId = backStackEntry.arguments?.getInt("cityName") ?: return@composable
-                MovieDetailsScreen(
-                    weatherViewModel = weatherViewModel,
-                    movieId = movieId,
+                val cityName = backStackEntry.arguments?.getString("cityName") ?: return@composable
+                CityForecastView(
+                    cityForecastViewModel = cityForecastViewModel,
+                    cityName = cityName,
                     navController
                 )
             }

@@ -3,8 +3,10 @@ package com.example.myweatherapp.data.repository
 import com.example.myweatherapp.data.remote.model.WeatherResponse
 import com.example.myweatherapp.domain.repository.WeatherRepository
 import com.example.myweatherapp.base.BaseResult
+import com.example.myweatherapp.core.data.utils.WrappedErrorResponse
 import com.example.myweatherapp.core.data.utils.WrappedResponse
 import com.example.myweatherapp.data.remote.api.WeatherApiService
+import com.example.myweatherapp.data.remote.model.ForecastResponse
 import com.example.myweatherapp.utils.Constants
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -16,10 +18,10 @@ class WeatherRepositoryImp @Inject constructor(
     private val movieApiService: WeatherApiService,
 ) :
     WeatherRepository {
-    override suspend fun getCurrentWeather(city: String): Flow<BaseResult<WeatherResponse>> {
+    override suspend fun getCurrentWeather(cityName: String): Flow<BaseResult<WeatherResponse>> {
         return flow {
             val response = movieApiService.getCurrentWeather(
-                query = city,
+                query = cityName,
                 key = Constants.Authorization.API_KEY
             )
             if (response.isSuccessful) {
@@ -27,45 +29,32 @@ class WeatherRepositoryImp @Inject constructor(
                 emit(BaseResult.DataState(body))
             } else {
                 val errorBody = response.errorBody()?.charStream()
-                val type = object : TypeToken<WrappedResponse<WeatherResponse>>() {}.type
-                val errorResponse: WrappedResponse<WeatherResponse> =
+                val type = object : TypeToken<WrappedErrorResponse>() {}.type
+                val errorResponse: WrappedErrorResponse =
                     Gson().fromJson(errorBody, type)
-                emit(BaseResult.ErrorState(response.code()))
+                emit(BaseResult.ErrorState(errorResponse.errorResponse))
             }
         }
     }
 
-    override suspend fun getPopularMovies(): Flow<BaseResult<WeatherResponse>> {
+    override suspend fun getCityForecast(cityName: String): Flow<BaseResult<ForecastResponse>> {
         return flow {
-            val response = movieApiService.getPopularMovies()
+            val response = movieApiService.getCityForecast(
+                query = cityName,
+                key = Constants.Authorization.API_KEY,
+                days = 5
+            )
             if (response.isSuccessful) {
                 val body = response.body()!!
                 emit(BaseResult.DataState(body))
             } else {
                 val errorBody = response.errorBody()?.charStream()
-                val type = object : TypeToken<WrappedResponse<WeatherResponse>>() {}.type
-                val errorResponse =
-                    Gson().fromJson<WrappedResponse<WeatherResponse>>(errorBody, type)
-                emit(BaseResult.ErrorState(response.code()))
+                val type = object : TypeToken<WrappedErrorResponse>() {}.type
+                val errorResponse: WrappedErrorResponse =
+                    Gson().fromJson(errorBody, type)
+                emit(BaseResult.ErrorState(errorResponse.errorResponse))
             }
         }
     }
-
-    override suspend fun getNowPlayingMovies(): Flow<BaseResult<WeatherResponse>> {
-        return flow {
-            val response = movieApiService.getNowPlayingMovies()
-            if (response.isSuccessful) {
-                val body = response.body()!!
-                emit(BaseResult.DataState(body))
-            } else {
-                val errorBody = response.errorBody()?.charStream()
-                val type = object : TypeToken<WrappedResponse<WeatherResponse>>() {}.type
-                val errorResponse =
-                    Gson().fromJson<WrappedResponse<WeatherResponse>>(errorBody, type)
-                emit(BaseResult.ErrorState(response.code()))
-            }
-        }
-    }
-
 
 }

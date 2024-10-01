@@ -8,8 +8,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,15 +39,16 @@ fun SearchScreen(
     navController: NavHostController,
 ) {
     val isLoading by weatherViewModel.isLoading.collectAsState()
-    val isError by weatherViewModel.errorCode.collectAsState()
-
+    val isError by weatherViewModel.errorResponse.collectAsState()
+    var searchQuery by rememberSaveable { mutableStateOf("") }
     val weatherState by weatherViewModel.currentCityWeather.collectAsState()
 
     isLoading.takeIf { it }?.let {
         LoadingState()
     }
-    isError.takeIf { it != 200 }?.let {
-        ErrorState()
+    isError?.takeIf { it.code != 200 }?.let { error ->
+        ErrorState(error.message)
+        weatherViewModel.clearError()
     }
 
     Column(
@@ -66,21 +72,24 @@ fun SearchScreen(
         }
         SearchBar(
             onSearch = { city ->
-                CoroutineScope(Dispatchers.IO).launch {
-                    weatherViewModel.getCityCurrentWeather(city).collect { state ->
-                        weatherViewModel.handleStateCityCurrentWeather(state)
-                    }
-                }
-
+                if (searchQuery != city)
+                    searchQuery = city
             }
         )
+
+        LaunchedEffect(searchQuery) {
+            if (searchQuery.isNotEmpty()) {
+                weatherViewModel.getCityCurrentWeather(searchQuery).collect { state ->
+                    weatherViewModel.handleStateCityCurrentWeather(state)
+                }
+            }
+        }
 
         weatherState?.let {
             WeatherRow(weather = it, onCityClick = { cityName ->
                 navController.navigate("cityWeatherForecast/$cityName")
             })
         }
-
     }
 }
 

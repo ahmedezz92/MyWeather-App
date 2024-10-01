@@ -19,10 +19,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.myweatherapp.R
 import com.example.myweatherapp.data.remote.model.WeatherResponse
 import com.example.myweatherapp.utils.Constants.URL.URL_IMAGE
 
@@ -48,9 +50,10 @@ fun WeatherRow(weather: WeatherResponse, onCityClick: (String) -> Unit) {
         ) {
             Text(
                 text = weather.location.name,
-                fontSize = 36.sp,
+                fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = Color.White,
+                letterSpacing = 2.sp
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -87,7 +90,7 @@ fun WeatherRow(weather: WeatherResponse, onCityClick: (String) -> Unit) {
                 ) {
                 Text(
                     text = "${weather.current.temp_c}°C",
-                    fontSize = 36.sp,
+                    fontSize = 30.sp,
                     color = Color.White
                 )
                 Text(
@@ -121,11 +124,10 @@ fun WeatherRow(weather: WeatherResponse, onCityClick: (String) -> Unit) {
                 horizontalArrangement = Arrangement.spacedBy(15.dp),
             ) {
 
-                WeatherInfoItem("Humidity", "${weather.current.humidity}%")
-                WeatherInfoItem("Feels like", "${weather.current.feelslike_c}")
+                WeatherInfoItem(stringResource(id = R.string.label_humidity), "${weather.current.humidity}%")
+                WeatherInfoItem(stringResource(id = R.string.label_feels_like), "${weather.current.feelslike_c}")
 
             }
-
 
         }
     }

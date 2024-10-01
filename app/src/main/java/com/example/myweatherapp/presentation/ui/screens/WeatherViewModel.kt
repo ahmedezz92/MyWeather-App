@@ -1,10 +1,11 @@
 package com.example.myweatherapp.presentation.ui.screens
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.myweatherapp.data.remote.model.ResultResponse
 import com.example.myweatherapp.data.remote.model.WeatherResponse
 import com.example.myweatherapp.base.BaseResult
-import com.example.myweatherapp.domain.usecase.GetCityCurrentWeather
+import com.example.myweatherapp.core.data.utils.ErrorResponse
+import com.example.myweatherapp.domain.usecase.GetCityCurrentWeatherUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,12 +18,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WeatherViewModel @Inject constructor(
-    private val getCityCurrentWeather: GetCityCurrentWeather,
+    private val getCityCurrentWeatherUseCase: GetCityCurrentWeatherUseCase,
 ) : ViewModel() {
 
     private val _currentWeatherState =
-        MutableStateFlow<GetWeatherState>(GetWeatherState.IsLoading)
-    val currentWeatherState: StateFlow<GetWeatherState> = _currentWeatherState.asStateFlow()
+        MutableStateFlow<GetCityCurrentWeatherState>(GetCityCurrentWeatherState.IsLoading)
+    val currentWeatherState: StateFlow<GetCityCurrentWeatherState> =
+        _currentWeatherState.asStateFlow()
 
     private val _currentCityWeather = MutableStateFlow<WeatherResponse?>(null)
     val currentCityWeather: StateFlow<WeatherResponse?> = _currentCityWeather
@@ -34,8 +36,8 @@ class WeatherViewModel @Inject constructor(
     val isLoading: StateFlow<Boolean> = _isLoading
 
     /*error messages*/
-    private val _errorCode = MutableStateFlow(200)
-    val errorCode: StateFlow<Int> = _errorCode
+    private val _errorResponse = MutableStateFlow<ErrorResponse?>(null)
+    val errorResponse: StateFlow<ErrorResponse?> = _errorResponse
 
     private var currentCity: String? = null
 
@@ -48,75 +50,71 @@ class WeatherViewModel @Inject constructor(
         _isLoading.value = false
     }
 
-    fun getCityCurrentWeather(cityName: String): Flow<GetWeatherState> = flow {
-        getCityCurrentWeather.execute(cityName)
+    fun getCityCurrentWeather(cityName: String): Flow<GetCityCurrentWeatherState> = flow {
+        getCityCurrentWeatherUseCase.execute(cityName)
             .onStart {
                 setLoading()
             }
-            .catch {
+            .catch { exception ->
                 hideLoading()
-                emit(
-                    GetWeatherState.Error(
-                        errorCode = -1
-                    )
-                )
+                Log.e("exp", exception.message.toString())
+
             }
             .collect { result ->
                 hideLoading()
                 when (result) {
                     is BaseResult.ErrorState -> {
                         val errorState =
-                            GetWeatherState.Error(result.errorCode)
+                            GetCityCurrentWeatherState.Error(result.errorResponse!!)
                         _currentWeatherState.value = errorState
                         emit(errorState)
                     }
 
                     is BaseResult.DataState -> {
-                        result.items?.let { movies ->
-                            val successState = GetWeatherState.Success(movies)
+                        result.items?.let { data ->
+                            val successState = GetCityCurrentWeatherState.Success(data)
                             _currentWeatherState.value = successState
                             _currentCityWeather.value = successState.data
                             currentCity = cityName
-
                             emit(successState)
-                        } ?: emit(GetWeatherState.Error(-1))
+                        }
                     }
                 }
             }
     }
 
-    fun handleStateCityCurrentWeather(state: GetWeatherState) {
+    fun handleStateCityCurrentWeather(state: GetCityCurrentWeatherState) {
         _currentWeatherState.value = state
         when (state) {
 
-            is GetWeatherState.IsLoading -> {
+            is GetCityCurrentWeatherState.IsLoading -> {
                 setLoading()
             }
 
-            is GetWeatherState.Success -> {
-                _currentWeatherState.value = GetWeatherState.IsLoading
-                _currentWeatherState.value = GetWeatherState.Success(
+            is GetCityCurrentWeatherState.Success -> {
+                _errorResponse.value = null
+                _currentWeatherState.value = GetCityCurrentWeatherState.IsLoading
+                _currentWeatherState.value = GetCityCurrentWeatherState.Success(
                     state.data
                 )
                 isLoaded = true
+
             }
 
-            is GetWeatherState.Error -> {
-                _errorCode.value = state.errorCode
-
+            is GetCityCurrentWeatherState.Error -> {
+                _errorResponse.value = state.errorResponse
             }
 
         }
     }
-
-//    fun getMovieById(id: Int): ResultResponse? {
-//        return _cityCurrentWeatherResponse.value. { it.id == id }
-//    }
-
-
-    sealed class GetWeatherState {
-        object IsLoading : GetWeatherState()
-        data class Success(val data: WeatherResponse) : GetWeatherState()
-        data class Error(val errorCode: Int) : GetWeatherState()
+    fun clearError() {
+        _errorResponse.value = null
     }
+
+}
+
+sealed class GetCityCurrentWeatherState {
+    object IsLoading : GetCityCurrentWeatherState()
+    data class Success(val data: WeatherResponse) : GetCityCurrentWeatherState()
+    data class Error(val errorResponse: ErrorResponse) : GetCityCurrentWeatherState()
 }
