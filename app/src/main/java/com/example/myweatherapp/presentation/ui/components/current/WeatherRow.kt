@@ -1,4 +1,4 @@
-package com.example.myweatherapp.presentation.ui.components
+package com.example.myweatherapp.presentation.ui.components.current
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.myweatherapp.data.remote.model.WeatherResponse
+import com.example.myweatherapp.utils.Constants.URL.URL_IMAGE
 
 @Composable
 fun WeatherRow(weather: WeatherResponse, onCityClick: (String) -> Unit) {
@@ -69,7 +70,7 @@ fun WeatherRow(weather: WeatherResponse, onCityClick: (String) -> Unit) {
             Spacer(modifier = Modifier.height(8.dp))
 
             AsyncImage(
-                model = "https:".plus(weather.current.condition.icon),
+                model = URL_IMAGE.plus(weather.current.condition.icon),
                 contentDescription = weather.current.condition.text,
                 modifier = Modifier
                     .width(100.dp)

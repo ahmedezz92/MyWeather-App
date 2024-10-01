@@ -9,7 +9,7 @@ object Constants {
 
     object URL {
         const val URL_BASE = "https://api.weatherapi.com/v1/"
-        const val URL_IMAGE = "https://cdn.weatherapi.com/weather/"
+        const val URL_IMAGE = "https:"
     }
 
     object Authorization {

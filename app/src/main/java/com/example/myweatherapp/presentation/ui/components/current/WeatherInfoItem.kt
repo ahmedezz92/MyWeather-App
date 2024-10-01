@@ -1,4 +1,4 @@
-package com.example.myweatherapp.presentation.ui.components
+package com.example.myweatherapp.presentation.ui.components.current
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.wrapContentSize
