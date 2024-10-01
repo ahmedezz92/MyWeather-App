@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onStart
@@ -19,19 +20,13 @@ class WeatherViewModel @Inject constructor(
     private val getCityCurrentWeather: GetCityCurrentWeather,
 ) : ViewModel() {
 
-    private val _query = MutableStateFlow("")
-    val query: StateFlow<String> = _query
+    private val _currentWeatherState =
+        MutableStateFlow<GetWeatherState>(GetWeatherState.IsLoading)
+    val currentWeatherState: StateFlow<GetWeatherState> = _currentWeatherState.asStateFlow()
 
-    private val _getMoviesState =
-        MutableStateFlow<GetWeatherActivityState>(GetWeatherActivityState.Init)
+    private val _currentCityWeather = MutableStateFlow<WeatherResponse?>(null)
+    val currentCityWeather: StateFlow<WeatherResponse?> = _currentCityWeather
 
-    /*upcoming movies variables*/
-    private val _cityCurrentWeatherState =
-        MutableStateFlow<GetWeatherActivityState>(GetWeatherActivityState.Init)
-    val cityCurrentWeatherState: StateFlow<GetWeatherActivityState> = _cityCurrentWeatherState
-
-    private val _cityCurrentWeatherResponse = MutableStateFlow<WeatherResponse?>(null)
-    val cityCurrentWeatherResponse: StateFlow<WeatherResponse?> = _cityCurrentWeatherResponse
     var isLoaded: Boolean = false
 
     /*loading progress for loading state*/
@@ -42,6 +37,9 @@ class WeatherViewModel @Inject constructor(
     private val _errorCode = MutableStateFlow(200)
     val errorCode: StateFlow<Int> = _errorCode
 
+    private var currentCity: String? = null
+
+
     private fun setLoading() {
         _isLoading.value = true
     }
@@ -50,7 +48,7 @@ class WeatherViewModel @Inject constructor(
         _isLoading.value = false
     }
 
-    fun getCityCurrentWeather(cityName: String): Flow<GetWeatherActivityState> = flow {
+    fun getCityCurrentWeather(cityName: String): Flow<GetWeatherState> = flow {
         getCityCurrentWeather.execute(cityName)
             .onStart {
                 setLoading()
@@ -58,7 +56,7 @@ class WeatherViewModel @Inject constructor(
             .catch {
                 hideLoading()
                 emit(
-                    GetWeatherActivityState.Error(
+                    GetWeatherState.Error(
                         errorCode = -1
                     )
                 )
@@ -68,54 +66,47 @@ class WeatherViewModel @Inject constructor(
                 when (result) {
                     is BaseResult.ErrorState -> {
                         val errorState =
-                            GetWeatherActivityState.Error(result.errorCode)
-                        _cityCurrentWeatherState.value = errorState
+                            GetWeatherState.Error(result.errorCode)
+                        _currentWeatherState.value = errorState
                         emit(errorState)
                     }
 
                     is BaseResult.DataState -> {
                         result.items?.let { movies ->
-                            val successState = GetWeatherActivityState.Success(movies)
-                            _cityCurrentWeatherState.value = successState
-                            _cityCurrentWeatherResponse.value = successState.data
+                            val successState = GetWeatherState.Success(movies)
+                            _currentWeatherState.value = successState
+                            _currentCityWeather.value = successState.data
+                            currentCity = cityName
+
                             emit(successState)
-                        } ?: emit(GetWeatherActivityState.Error(-1))
+                        } ?: emit(GetWeatherState.Error(-1))
                     }
                 }
             }
     }
 
-    fun handleStateCityCurrentWeather(state: GetWeatherActivityState) {
-        _cityCurrentWeatherState.value = state
+    fun handleStateCityCurrentWeather(state: GetWeatherState) {
+        _currentWeatherState.value = state
         when (state) {
-            is GetWeatherActivityState.Init -> Unit
 
-            is GetWeatherActivityState.IsLoading -> {
+            is GetWeatherState.IsLoading -> {
                 setLoading()
             }
 
-            is GetWeatherActivityState.Success -> {
-                _getMoviesState.value = GetWeatherActivityState.IsLoading(false)
-                _cityCurrentWeatherState.value = GetWeatherActivityState.Success(
+            is GetWeatherState.Success -> {
+                _currentWeatherState.value = GetWeatherState.IsLoading
+                _currentWeatherState.value = GetWeatherState.Success(
                     state.data
                 )
                 isLoaded = true
             }
 
-            is GetWeatherActivityState.Error -> {
+            is GetWeatherState.Error -> {
                 _errorCode.value = state.errorCode
 
             }
 
-            is GetWeatherActivityState.ShowToast -> {
-                if (state.isConnectionError)
-                    _errorCode.value = state.code
-            }
         }
-    }
-
-    fun onQueryChanged(query: String) {
-        _query.value = query
     }
 
 //    fun getMovieById(id: Int): ResultResponse? {
@@ -123,16 +114,9 @@ class WeatherViewModel @Inject constructor(
 //    }
 
 
-    sealed class GetWeatherActivityState {
-        object Init : GetWeatherActivityState()
-        data class IsLoading(val isLoading: Boolean) : GetWeatherActivityState()
-        data class ShowToast(val code: Int, val isConnectionError: Boolean) :
-            GetWeatherActivityState()
-
-        data class Success(val data: WeatherResponse) :
-            GetWeatherActivityState()
-
-        data class Error(val errorCode: Int) :
-            GetWeatherActivityState()
+    sealed class GetWeatherState {
+        object IsLoading : GetWeatherState()
+        data class Success(val data: WeatherResponse) : GetWeatherState()
+        data class Error(val errorCode: Int) : GetWeatherState()
     }
 }

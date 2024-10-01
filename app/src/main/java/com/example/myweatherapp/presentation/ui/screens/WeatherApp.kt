@@ -21,7 +21,6 @@ import com.example.myweatherapp.presentation.ui.components.SearchScreen
 @Preview
 @Composable
 fun WeatherApp(weatherViewModel: WeatherViewModel = hiltViewModel()) {
-    val query by weatherViewModel.query.collectAsState()
     val navController = rememberNavController()
 
     Scaffold(
@@ -38,10 +37,10 @@ fun WeatherApp(weatherViewModel: WeatherViewModel = hiltViewModel()) {
                 )
             }
             composable(
-                route = "movieDetails/{movieId}",
-                arguments = listOf(navArgument("movieId") { type = NavType.IntType })
+                route = "cityWeatherForecast/{cityName}",
+                arguments = listOf(navArgument("cityName") { type = NavType.StringType })
             ) { backStackEntry ->
-                val movieId = backStackEntry.arguments?.getInt("movieId") ?: return@composable
+                val movieId = backStackEntry.arguments?.getInt("cityName") ?: return@composable
                 MovieDetailsScreen(
                     weatherViewModel = weatherViewModel,
                     movieId = movieId,
