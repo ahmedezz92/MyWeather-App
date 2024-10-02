@@ -15,4 +15,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "MyWeather App"
 include(":app")
- 

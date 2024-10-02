@@ -16,8 +16,6 @@ k
 ;app/src/main/java/com/example/myweatherapp/MyApplication.kt,7\8\7879e082cbdcf6bdc589cee025e8455e60105190
 |
 Lapp/src/main/java/com/example/myweatherapp/utils/connectivity/NetworkUtil.kt,8\3\83ee1044f0640cee28b8d47e2652b45ccc51b634
-C
-settings.gradle.kts,7\4\749edfcc96398253e5b3416184e95c46621da850
 ê
 `app/src/main/java/com/example/myweatherapp/presentation/ui/components/current/WeatherInfoItem.kt,c\0\c02953ee883faeb4e24b3c3006068789a954c748
 m
