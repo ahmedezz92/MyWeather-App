@@ -20,8 +20,8 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
-          java-version: '17.0.5' # Specify the JDK version here
-          distribution: 'adopt'
+          java-version: '17' # Specify the JDK version here
+          distribution: 'temurin'
 
       - name: Build with Gradle
         run: ./gradlew build
