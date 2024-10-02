@@ -25,6 +25,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            enableUnitTestCoverage = true
+            enableAndroidTestCoverage = true
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -44,9 +48,15 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-
 }
 
+tasks.register("ciTests") {
+    description = "Runs all checks and tests"
+    dependsOn("testDebugUnitTest")
+    dependsOn("ktlintCheck")
+    dependsOn("detekt")
+    dependsOn("lint")
+}
 dependencies {
 
     implementation("androidx.core:core-ktx:1.12.0")
@@ -62,9 +72,9 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview:1.5.4")
     implementation("androidx.activity:activity-compose:1.8.1")
     debugImplementation("androidx.compose.ui:ui-tooling:1.5.4")
-    implementation ("androidx.compose.ui:ui:1.5.4")
-    implementation ("androidx.compose.foundation:foundation:1.5.4")
-    implementation ("androidx.compose.material3:material3:1.2.0-beta02")
+    implementation("androidx.compose.ui:ui:1.5.4")
+    implementation("androidx.compose.foundation:foundation:1.5.4")
+    implementation("androidx.compose.material3:material3:1.2.0-beta02")
     implementation("io.coil-kt:coil-compose:2.4.0")
 
     // Lifecycle and ViewModel for Compose
@@ -112,8 +122,8 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0")
 
     // Turbine for Flow testing
-    testImplementation ("app.cash.turbine:turbine:0.7.0")
+    testImplementation("app.cash.turbine:turbine:0.7.0")
 
     // MockK for mocking
-    testImplementation ("io.mockk:mockk:1.13.2")
+    testImplementation("io.mockk:mockk:1.13.2")
 }
