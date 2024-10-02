@@ -20,16 +20,10 @@ jobs:
           cache: gradle
 
       - name: Grant execute permission for gradlew
-        run: chmod +x gradlew ciTests
+        run: chmod +x gradlew
 
-      - name: Run Build
-        run: ./project_tools.sh 1
-
-      - name: Run Static Analysis
-        run: ./project_tools.sh 2
-
-      - name: Run Tests
-        run: ./project_tools.sh 3
+      - name: Run All Checks and Tests
+        run: ./gradlew ciTests
 
       - name: Upload APK
         uses: actions/upload-artifact@v3
@@ -53,7 +47,7 @@ jobs:
 
   deploy:
     needs: build
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - name: Download APK
