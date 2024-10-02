@@ -116,8 +116,8 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
-    implementation ("io.gitlab.arturbos.detekt:detekt-gradle-plugin:1.22.0" )// Replace with your desired version
-
+    implementation ("io.gitlab.arturbos.detekt:detekt-gradle-plugin:1.22.0" )
+    implementation ("org.jlleitschuh.gradle.ktlint:ktlint-gradle:10.2.1")
     // For mocking
     testImplementation("org.mockito:mockito-core:4.11.0")
     testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
