@@ -22,8 +22,12 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Run Ktlint
+        run: ./gradlew ktlintCheck
+
       - name: Run All Checks and Tests
         run: ./gradlew ciTests
+
 
       - name: Upload APK
         uses: actions/upload-artifact@v3

@@ -51,7 +51,6 @@ android {
         jvmTarget = "1.8"
     }
 }
-
 tasks.register("ciTests") {
     description = "Runs all checks and tests"
     dependsOn("testDebugUnitTest")
