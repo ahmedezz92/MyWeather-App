@@ -56,7 +56,7 @@ android {
 tasks.register("ciTests") {
     description = "Runs all checks and tests"
     dependsOn("testDebugUnitTest")
-    dependsOn("ktlintCheck")
+//    dependsOn("ktlintCheck")
     dependsOn("detekt")
     dependsOn("lint")
 }

@@ -8,3 +8,9 @@ plugins {
     id("io.gitlab.arturbosch.detekt") version "1.22.0" // For code quality analysis
     id("jacoco") // For code coverage
 }
+ktlint {
+    version.set("0.49.0") // Make sure to use a compatible version of KtLint
+    debug.set(true)
+    outputToConsole.set(true)
+    ignoreFailures.set(false)
+}

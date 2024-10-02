@@ -34,8 +34,6 @@ Yapp/src/main/java/com/example/myweatherapp/domain/usecase/GetCityCurrentWeather
 Sapp/src/main/java/com/example/myweatherapp/domain/usecase/GetCityForecastUseCase.kt,c\e\ceb0fa10b7b2e8a93923dba4d3329b425e11f772
 
 Oapp/src/main/java/com/example/myweatherapp/data/remote/api/WeatherApiService.kt,b\f\bfc85d670ef13dfbaa262edf55505c8f722ddaf3
-‹
-[app/src/main/java/com/example/myweatherapp/presentation/ui/components/current/WeatherRow.kt,f\9\f999d24bdf143798f04797648bda853d14e7f2f9
 Ž
 ^app/src/main/java/com/example/myweatherapp/presentation/ui/components/forecast/CityForecast.kt,7\e\7e4a481e7c14cf3056c6e020ed588963f7723c2f
 ˆ
