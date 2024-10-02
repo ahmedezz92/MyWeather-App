@@ -33,6 +33,7 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -43,6 +44,7 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
 }
 
 dependencies {
@@ -109,5 +111,9 @@ dependencies {
     // For coroutine testing
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0")
 
+    // Turbine for Flow testing
+    testImplementation ("app.cash.turbine:turbine:0.7.0")
 
+    // MockK for mocking
+    testImplementation ("io.mockk:mockk:1.13.2")
 }

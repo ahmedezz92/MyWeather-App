@@ -1,4 +1,4 @@
-package com.example.myweatherapp.presentation.ui.components
+package com.example.myweatherapp.presentation.ui.components.search
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions

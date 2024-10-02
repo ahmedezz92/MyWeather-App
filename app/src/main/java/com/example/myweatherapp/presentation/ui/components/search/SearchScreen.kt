@@ -1,4 +1,4 @@
-package com.example.myweatherapp.presentation.ui.components
+package com.example.myweatherapp.presentation.ui.components.search
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,7 +12,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -29,8 +28,6 @@ import com.example.myweatherapp.presentation.ui.components.current.WeatherRow
 import com.example.myweatherapp.presentation.ui.components.states.ErrorState
 import com.example.myweatherapp.presentation.ui.components.states.LoadingState
 import com.example.myweatherapp.presentation.ui.screens.WeatherViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable

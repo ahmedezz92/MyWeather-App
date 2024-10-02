@@ -29,8 +29,6 @@ class WeatherViewModel @Inject constructor(
     private val _currentCityWeather = MutableStateFlow<WeatherResponse?>(null)
     val currentCityWeather: StateFlow<WeatherResponse?> = _currentCityWeather
 
-    var isLoaded: Boolean = false
-
     /*loading progress for loading state*/
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
@@ -86,27 +84,24 @@ class WeatherViewModel @Inject constructor(
     fun handleStateCityCurrentWeather(state: GetCityCurrentWeatherState) {
         _currentWeatherState.value = state
         when (state) {
-
             is GetCityCurrentWeatherState.IsLoading -> {
                 setLoading()
             }
 
             is GetCityCurrentWeatherState.Success -> {
                 _errorResponse.value = null
-                _currentWeatherState.value = GetCityCurrentWeatherState.IsLoading
                 _currentWeatherState.value = GetCityCurrentWeatherState.Success(
                     state.data
                 )
-                isLoaded = true
-
+                _currentCityWeather.value = state.data // Update this line to set the current city weather
             }
 
             is GetCityCurrentWeatherState.Error -> {
                 _errorResponse.value = state.errorResponse
             }
-
         }
     }
+
     fun clearError() {
         _errorResponse.value = null
     }

@@ -12,7 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.myweatherapp.presentation.ui.components.forecast.CityForecastView
 //import com.example.myweatherapp.presentation.ui.components.MovieDetailsScreen
-import com.example.myweatherapp.presentation.ui.components.SearchScreen
+import com.example.myweatherapp.presentation.ui.components.search.SearchScreen
 import com.example.myweatherapp.presentation.ui.components.forecast.CityForecastViewModel
 
 
