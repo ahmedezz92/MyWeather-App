@@ -3,6 +3,8 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
+    id("io.gitlab.arturbosch.detekt")
+
 }
 
 android {
@@ -114,6 +116,8 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
+    implementation ("io.gitlab.arturbos.detekt:detekt-gradle-plugin:1.22.0" )// Replace with your desired version
+
     // For mocking
     testImplementation("org.mockito:mockito-core:4.11.0")
     testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
@@ -126,4 +130,5 @@ dependencies {
 
     // MockK for mocking
     testImplementation("io.mockk:mockk:1.13.2")
+
 }
