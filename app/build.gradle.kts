@@ -45,12 +45,14 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.4"  // Use the version compatible with Kotlin 1.9.20
+        kotlinCompilerExtensionVersion = "1.5.4"
     }
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
 }
+
 tasks.register("ciTests") {
     description = "Runs all checks and tests"
     dependsOn("testDebugUnitTest")
@@ -115,8 +117,8 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
-    implementation ("io.gitlab.arturbos.detekt:detekt-gradle-plugin:1.22.0" )
-    implementation ("org.jlleitschuh.gradle.ktlint:ktlint-gradle:11.0.0")
+    implementation("io.gitlab.arturbos.detekt:detekt-gradle-plugin:1.22.0")
+    implementation("org.jlleitschuh.gradle.ktlint:ktlint-gradle:11.0.0")
     // For mocking
     testImplementation("org.mockito:mockito-core:4.11.0")
     testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
@@ -129,5 +131,4 @@ dependencies {
 
     // MockK for mocking
     testImplementation("io.mockk:mockk:1.13.2")
-
 }
