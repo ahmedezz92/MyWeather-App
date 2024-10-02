@@ -35,5 +35,5 @@ The application is built using modern Android development practices, including K
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/weather-forecast-app.git
+   git clone https://github.com/ahmedezz92/MyWeather-App
    cd weather-forecast-app
