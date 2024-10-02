@@ -1,7 +1,10 @@
 package com.example.myweatherapp.di
 
+import android.app.Application
 import com.example.myweatherapp.domain.repository.WeatherRepository
 import com.example.myweatherapp.core.data.module.NetworkModule
+import com.example.myweatherapp.data.local.WeatherDao
+import com.example.myweatherapp.data.local.WeatherDatabase
 import com.example.myweatherapp.data.remote.api.WeatherApiService
 import com.example.myweatherapp.data.repository.WeatherRepositoryImp
 import dagger.Module
@@ -16,13 +19,17 @@ import javax.inject.Singleton
 object AppModule {
     @Singleton
     @Provides
-    fun provideHomeApi(retrofit: Retrofit): WeatherApiService {
+    fun provideWeatherApi(retrofit: Retrofit): WeatherApiService {
         return retrofit.create(WeatherApiService::class.java)
     }
 
+
     @Singleton
     @Provides
-    fun provideHomeRepository(homeService: WeatherApiService): WeatherRepository {
-        return WeatherRepositoryImp(homeService)
+    fun provideWeatherRepository(
+        homeService: WeatherApiService,
+        weatherDao: WeatherDao,
+    ): WeatherRepository {
+        return WeatherRepositoryImp(homeService, weatherDao)
     }
 }
